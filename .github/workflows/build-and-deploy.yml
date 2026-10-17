@@ -50,8 +50,13 @@ jobs:
         env:
           NEW_TAG: ${{ steps.vars.outputs.tag }}
         run: |
-          sed -i -E "s#image: <your-dockerhub-user>/gitops-demo-app:.*#image: $IMAGE_NAME:$NEW_TAG#" deploy-repo/app/deployment.yaml
-          grep "image:" deploy-repo/app/deployment.yaml
+          manifest=deploy-repo/app/deployment.yaml
+          grep -qE '^[[:space:]]*image:.*gitops-demo-app:' "$manifest" || {
+            echo "Could not find a gitops-demo-app image in $manifest"
+            exit 1
+          }
+          sed -i -E "s#(^[[:space:]]*image:[[:space:]]*).*gitops-demo-app:[^[:space:]]+#\1${IMAGE_NAME}:${NEW_TAG}#" "$manifest"
+          grep -F "image: ${IMAGE_NAME}:${NEW_TAG}" "$manifest"
  
       - name: Commit and push deployment change
         working-directory: deploy-repo
