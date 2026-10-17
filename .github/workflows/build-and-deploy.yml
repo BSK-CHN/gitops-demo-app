@@ -8,8 +8,8 @@ permissions:
   contents: read
  
 env:
-  IMAGE_NAME: <your-dockerhub-user>/gitops-demo-app
-  DEPLOY_REPO: <your-github-user>/gitops-demo-deploy
+  IMAGE_NAME: thecloudschool/gitops-demo-app
+  DEPLOY_REPO: BSK-CHN/gitops-demo-deploy
  
 jobs:
   build-and-update:
